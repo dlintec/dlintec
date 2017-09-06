@@ -18,6 +18,7 @@ orionjs:file-attribute
 orionjs:summernote
 orionjs:lang-es
 orionjs:pages
+orionjs:collections
 meteor-base@1.1.0
 mobile-experience@1.0.4
 mongo@1.1.19
@@ -55,3 +56,6 @@ tap:i18n
 tap:i18n-ui
 naturaily:simple-schema-translations
 coffeescript
+email
+orionjs:config
+orionjs:s3

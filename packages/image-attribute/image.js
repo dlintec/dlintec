@@ -18,12 +18,18 @@ ReactiveTemplates.helpers('attribute.image', {
   },
   image: function() {
     var session_value=Session.get('image' + this.name);
-    var urlParams=parse_url(Meteor.absoluteUrl(session_value.url));
-    var abs_url=urlParams.scheme+'://'+urlParams.authority+session_value.url
-    //console.log('image helper:',abs_url,session_value);
-    var new_value=_.clone(session_value);
-    new_value.url=abs_url;
-    return new_value;
+    if (typeof session_value != 'undefined') {
+      var urlParams=parse_url(Meteor.absoluteUrl(session_value.url));
+      var abs_url=urlParams.scheme+'://'+urlParams.authority+session_value.url
+      //console.log(" sessionvalue exists:"+session_value);
+      var new_value=_.clone(session_value);
+      new_value.url=abs_url;
+      return new_value;
+    }else{
+      //console.log(" sessionvalue:"+session_value);
+      return session_value;
+    }
+
   }
 });
 

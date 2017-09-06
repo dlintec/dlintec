@@ -54,6 +54,7 @@ jquery@1.11.10
 kadira:blaze-layout@2.3.0
 kadira:flow-router@2.12.1
 launch-screen@1.1.1
+lepozepo:s3@5.1.10
 less@2.7.9
 livedata@1.0.18
 localstorage@1.1.1
@@ -99,6 +100,7 @@ orionjs:image-attribute@1.8.1
 orionjs:lang-en@1.8.1
 orionjs:lang-es@1.8.1
 orionjs:pages@1.8.1
+orionjs:s3@1.8.1
 orionjs:summernote@1.8.1
 promise@0.8.9
 raix:eventemitter@0.1.3

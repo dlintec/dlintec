@@ -46,8 +46,10 @@ orion.links.get = function() {
   var links = this.find({ index: { $exists: true }, parent: { $exists: false } }, { sort: { index: 1 } }).fetch();
   return _.filter(links, function(link) {
     if (link.permission && !Roles.userHasPermission(Meteor.userId(), link.permission)) {
+      console.log("permission false");
       return false;
     }
+    console.log("permision true");
     return true;
   });
 };
@@ -69,6 +71,7 @@ orion.links.helpers({
 });
 
 Template.registerHelper('adminLinks', function() {
+  
   return orion.links.get();
 });
 

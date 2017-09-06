@@ -59,7 +59,7 @@ commonString=function (lcstest, lcstarget) {
 gridfsURL=function(pURL) {
   var urlParams=parse_url(Meteor.absoluteUrl(pURL));
   var abs_url=urlParams.scheme+'://'+urlParams.authority+pURL
-  console.log('gridfsURL helper:',abs_url,Template.instance().view.name);
+  //console.log('gridfsURL helper:',abs_url,Template.instance().view.name);
   //  new_value.url=abs_url;
 
   return abs_url;

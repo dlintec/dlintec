@@ -54,3 +54,4 @@ useraccounts:flow-routing@1.14.3
 tap:i18n
 tap:i18n-ui
 naturaily:simple-schema-translations
+coffeescript

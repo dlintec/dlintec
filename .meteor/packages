@@ -59,3 +59,6 @@ coffeescript
 email@1.2.3
 orionjs:config
 orionjs:s3
+accounts-google
+accounts-facebook
+service-configuration

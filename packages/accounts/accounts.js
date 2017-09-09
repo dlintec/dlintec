@@ -10,7 +10,7 @@ Options.init('profileSchema', {
   },
   language: {
     type: String,
-    label: orion.helpers.getTranslation('global.language'),
+    label: function (){return i18n('global.language');},
     optional: true,
     allowedValues: ['Español', 'English'],
 
@@ -54,13 +54,13 @@ AccountsTemplates.addField({
   placeholder: Meteor.isClient ? i18n('accounts.register.fields.name') : 'Your Name',
   required: true,
 });
-AccountsTemplates.addField({
-  _id: 'language',
-  type: 'text',
-  displayName: Meteor.isClient ? i18n('global.language') : 'language',
-  placeholder: Meteor.isClient ? i18n('global.language') : 'english',
-  required: false,
-});
+//AccountsTemplates.addField({
+//  _id: 'language',
+//  type: 'text',
+  //displayName: Meteor.isClient ? i18n('global.language') : 'language',
+  //placeholder: Meteor.isClient ? i18n('global.language') : 'english',
+//  required: false,
+//});
 UsersEmailsSchema = new SimpleSchema({
   emails: {
     type: [Object],

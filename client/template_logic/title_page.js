@@ -19,6 +19,9 @@ Template.titlePage.events({
     });
   },
 });
+Template.titlePage.created = function() {
+Meteor.Loader.loadJs("/greensock/TweenMax.min.js"); 
+}
 
 Template.titlePage.onCreated(function() {
   const pagesHandle=this.subscribe('pages');

@@ -18,6 +18,15 @@ console.log(`Startup client at main.jsx...`,TAPi18n.getLanguages());
 //render(<reactApp />, document.getElementById('render-target'));
   //ReactDOM.render(<reactApp />,  document.getElementById('render-target'));
   if (Meteor.isClient) {
+      Bert.defaults = {
+        hideDelay: 5000,
+        // Accepts: a number in milliseconds.
+        style: 'fixed-top',
+        // Accepts: fixed-top, fixed-bottom, growl-top-left,   growl-top-right,
+        // growl-bottom-left, growl-bottom-right.
+        type: 'default'
+        // Accepts: default, success, info, warning, danger.
+      };
       console.log('startup client i18n');
       Session.set("showLoadingIndicator", true);
 

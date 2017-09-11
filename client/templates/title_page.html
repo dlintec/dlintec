@@ -1,5 +1,6 @@
 <template name="titlePage">
   <h4>+</h4>
+
   <div class="img-hero fade-in" style="background-image: url({{gridfsURL (dict 'site.heroImage.url' '/favicon.png')}})" >
   </div>
   <div class="container fade-in" style="min-height:70vh">
@@ -42,9 +43,18 @@
     <!--p>{{> i18n_buttons class="btn btn-danger"}}</p-->
     <!--p>{{_ "hello"}} test2</p-->
     <a href="/release-unsigned.apk" rel='external' download class="btn btn-default btn-file btn-xs"><i class="fa fa-android " aria-hidden="true"></i> Android App</a>
+    <button data-social-login="loginWithFacebook" type="button" class="btn">
+      <i class="fa fa-facebook"></i> Sign in with Facebook
+    </button>
   </div>
   <!--div class="title-section overlay" >
 
   </div-->
   <h1> </h1>
+
+
+
+
+
+
 </template>

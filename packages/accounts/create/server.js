@@ -12,6 +12,7 @@ Meteor.methods({
     }
 
     var newUser = { email: options.email };
+  
     if (options.password) {
       newUser.password = options.password;
     }

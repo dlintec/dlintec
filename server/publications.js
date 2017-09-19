@@ -16,3 +16,6 @@ Meteor.publish( 'user', function() {
     }
   });
 });
+Meteor.publish('dioramasPub', function(){
+  return Dioramas.find();
+});

@@ -25,7 +25,7 @@
   display: none;
 }
 body {
-    font-family: "Lato",sans-serif;
+    font-family: "Roboto",sans-serif;
     font-size: 14px;
     line-height: 1.42857143;
     font-weight: 300;
@@ -34,9 +34,9 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-a { color: #43598c; }
+a { color: #818181; }
 
-a:hover { color: #5d7bc1; }​
+a:hover { color: #000000; }​
 a:hover, a:focus {
     color: #ffffff;
     background-color: #000;
@@ -209,7 +209,7 @@ hr {
     user-select: none;
     padding: 4px 8px;
     font-size: 80%;
-    font-family: 'Lato',sans-serif;
+    font-family: 'Roboto',sans-serif;
     line-height: 1.5;
     text-align: center;
     color: #fff;
@@ -239,12 +239,12 @@ hr {
 
 .btn {
 
-    padding: 14px 24px;
+
     border: 0 none;
     font-weight: 700;
     margin-right: 0px;
-    margin-bottom: 5px;
-
+    margin-bottom: 2px;
+    margin-top: 2px;
 
     display: inline-block;
     font-weight: 400;
@@ -258,9 +258,9 @@ hr {
     user-select: none;
     border: 2px solid transparent;
 
-    padding: .5rem 1rem;
+    padding: .5rem .7rem;
 
-    border-radius: 1rem;
+    border-radius: 2rem;
     -webkit-transition: all .2s ease-in-out;
     -o-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
@@ -272,7 +272,10 @@ hr {
 }
 .btn:focus, .btn:active:focus, .btn.active:focus {
     /**outline: 0 none;**/
-    outline: #8c8c8c solid   ;
+    /*outline: rgb(#ffffff, 0.51) solid   ;*/
+
+    outline: none;
+
     /*border: 1px solid transparent;*/
     color: #ffffff;
 }
@@ -289,7 +292,7 @@ hr {
     /*border-color: #6681b0;*/
 }
 .btn-primary {
-    background: #0099cc;
+    background: #577c74;
     color: #ffffff;
 }
 
@@ -332,7 +335,9 @@ hr {
   /*border-color: #425685;*/
 
 }
-
+.btn .btn-xs .btn-default .disabled {
+  background: black;
+}
 .alert-danger {
     color: #ffffff;
     background-color: #a94442;
@@ -429,7 +434,7 @@ code {
 
 .orion-bootstrap-admin {
     color: #737373;
-    font-family: 'Lato', sans-serif;
+    font-family: 'Roboto', sans-serif;
     -webkit-font-smoothing: antialiased;
 
 }
@@ -468,6 +473,7 @@ color: #ffffff;
     border:none;
 }
 .orion-bootstrap-admin .index-table tbody tr {
+
       background-color: white;
 }
 .orion-bootstrap-admin .index-table tbody tr:hover {
@@ -533,7 +539,7 @@ color: #ffffff;
   -webkit-font-smoothing: antialiased;
 }
 .section,.title-section {
-  /*font-family: 'Lato', sans-serif;*/
+  /*font-family: 'Roboto', sans-serif;*/
   height: 100vh ;
   width: 100%;
   display: -ms-flexbox;
@@ -581,12 +587,12 @@ color: #ffffff;
 }
 
 .section-subtitle {
-  font-family: 'Lato', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 4vh;
   font-weight: 400;
 }
 .section-normal {
-  /*font-family: 'Lato', sans-serif;*/
+  /*font-family: 'Roboto', sans-serif;*/
   font-size: 1.8vh;
   /*font-weight: 10;*/
   -webkit-font-smoothing: antialiased;
@@ -725,4 +731,30 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
     background-color: rgb(130, 130, 130);
     background-image: none;
     color: rgb(0, 0, 0);
+}
+.tooltip {
+  background-color: white;
+  color:black;
+  border: 5px solid white;
+  z-index: 10001;
+  pointer-events: none;
+  transition: opacity .5s ease-out;
+  opacity: 0;
+  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, .5);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .5);
+  padding: .1rem .3rem;
+
+  border-radius: 1.5rem;
+  border-bottom-left-radius: 0px;
+
+}
+
+.tooltip.hide {
+  transition: opacity 3s ease-out;
+  opacity: 0;
+}
+
+.tooltip.show {
+  transition: opacity .5s ease-out;
+  opacity: 1;
 }

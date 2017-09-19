@@ -1,3 +1,4 @@
+console.log('Starting client...');
 import React from 'react';
 import {mount} from 'react-mounter';
 import reactApp from '/imports/ui/components/reactApp.jsx';
@@ -5,14 +6,14 @@ import reactApp from '/imports/ui/components/reactApp.jsx';
 getUserLanguage = function () {
   // Put here the logic for determining the user language
   var userLang = navigator.language || navigator.userLanguage;
-  console.log(`user language: ${userLang}`);
+  console.log(`User language: ${userLang}`);
   userLang = userLang.split('-')[0];
   Session.set('lang', userLang);
   return userLang;
 };
 
 Meteor.startup(() => {
-console.log(`Startup client at main.jsx...`,TAPi18n.getLanguages());
+console.log(`TAPi18n languages`,TAPi18n.getLanguages());
 
 //mount(reactApp , {name: 'k-react-app'});
 //render(<reactApp />, document.getElementById('render-target'));
@@ -27,7 +28,7 @@ console.log(`Startup client at main.jsx...`,TAPi18n.getLanguages());
         type: 'default'
         // Accepts: default, success, info, warning, danger.
       };
-      console.log('startup client i18n');
+      console.log('Startup client i18n');
       Session.set("showLoadingIndicator", true);
 
       TAPi18n.setLanguage(getUserLanguage())
@@ -39,7 +40,7 @@ console.log(`Startup client at main.jsx...`,TAPi18n.getLanguages());
           console.log(error_message);
         });
 
-      console.log('i18n extend datatable');
+      //console.log('i18n extend datatable');
       $.extend(true, $.fn.dataTable.defaults, {
         language: {
           "search": i18n("tabular.search")+":",

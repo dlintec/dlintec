@@ -30,8 +30,8 @@ Template.header.onCreated(function() {
     FlowRouter.watchPathChange();
     const pagesIsReady = pagesHandle.ready();
     const sectionsIsReady = sectionsHandle.ready();
-    console.log(`Header Pages Handle is ${pagesIsReady ? 'ready' : 'not ready'}`);
-    console.log(`Header Sections Handle is ${sectionsIsReady ? 'ready' : 'not ready'}`);
+    //console.log(`Header Pages Handle is ${pagesIsReady ? 'ready' : 'not ready'}`);
+    //console.log(`Header Sections Handle is ${sectionsIsReady ? 'ready' : 'not ready'}`);
 
 
     //document.title = orion.dictionary.get('site.title', 'dlintec');

@@ -1,0 +1,107 @@
+.divBuilderPanel {
+  /*background-color: whitevec4(1.0, 1.0, 1.0, 0);*/
+  color:black;
+
+  opacity:1;
+  z-index: 6000;
+  position:fixed;
+  top:0;
+  height:100vh;
+  width:100%;
+
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-justify-content: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  text-align: center;
+  -webkit-transition: all .2s ease-in-out;
+  -o-transition: all .2s ease-in-out;
+  transition: all .2s ease-in-out;
+}
+
+.divBuilderPanelSection {
+
+}
+.divBuilderTitle{
+  text-align: left;
+  font-size: 150%;
+}
+.btn-bottom-center {
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform: translateX(-50%);
+  z-index: 6010;
+
+}
+.btn-bottom-center:hover {
+
+  -webkit-box-shadow: 0 2px 12px rgba(0, 0, 0, .5);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .5);
+
+
+}
+.divBuilderBottomPanel {
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  display:block;
+  background-color: white;
+  color:black;
+  opacity:1;
+  z-index: 6011;
+  -webkit-box-shadow: 0 -2px 12px rgba(0, 0, 0, .5);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, .5);
+  -webkit-transition: all .2s ease-in-out;
+  -o-transition: all .2s ease-in-out;
+  transition: all .2s ease-in-out;
+
+}
+.divBuilderPanelContent {
+  background-color: white;
+  color:black;
+
+  max-height: 95vh;
+  max-width: 95%;
+
+
+  opacity:1;
+  min-height: 30vh;
+  min-width: 50%;
+  width:auto;
+  left: 50%;
+  transform: translateX(-50%);
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-justify-content: flex-start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  position: fixed;
+  background-position: center;
+  text-align: justify;
+  -webkit-box-shadow: 0 2px 12px rgba(0, 0, 0, .5);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .5);
+  -webkit-transition: all .2s ease-in-out;
+  -o-transition: all .2s ease-in-out;
+  transition: all .2s ease-in-out;
+
+}
+.divBuilderPanel.hide {
+  transition: opacity 3s ease-out;
+  opacity: 0;
+}
+
+.divBuilderPanel.show {
+  transition: opacity .5s ease-out;
+  opacity: 1;
+}

@@ -19,7 +19,7 @@ Template.mainPage.onCreated(function () {
     FlowRouter.watchPathChange();
 
     const sectionsIsReady = sectionsHandle.ready();
-    console.log(`mainPage Handle is ${sectionsIsReady ? 'ready' : 'not ready'}`);
+    //console.log(`mainPage Handle is ${sectionsIsReady ? 'ready' : 'not ready'}`);
     //Session.set('lang', userLang);
 
     //document.title = orion.dictionary.get('site.title', 'dlintec');

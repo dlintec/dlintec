@@ -1,8 +1,36 @@
 <template name="titlePage">
   <h4>+</h4>
 
-  <div class="img-hero fade-in" style="background-image: url({{gridfsURL (dict 'site.heroImage.url' '/dlintec-hero.png')}})" >
+  <div class="img-hero fade-in" style="min-height:30vh;background-image: url({{gridfsURL (dict 'site.heroImage.url' '/dlintec-hero.png')}})" >
+
+    <svg id="svghero" viewBox="0 0 1920 480" style="opacity:0;width: 100%; height: 100%;" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+     <!-- Created with SVG-edit - https://github.com/SVG-Edit/svgedit-->
+     <g class="layer" display="none">
+      <title>Layer 1</title>
+      <path fill="none" stroke="#000000" stroke-width="5" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" d="m203.5,60.5l199,0l99,170l-100,171l-200,1l-98,-173l100,-169z" id="svg_14" opacity="0.25"/>
+     </g>
+     <g class="layer">
+      <title>capa-logo</title>
+      <text stroke="#000000" fill="#000000" stroke-width="0" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" stroke-opacity="0" x="258.997985" y="367.096944" id="svg_27" font-size="24" font-family="Sans-serif" text-anchor="middle" xml:space="preserve" font-weight="bold" transform="matrix(6.308361530034647,0,0,6.308361530034647,-590.5036368997226,-2040.0382435917704) ">dlintec</text>
+      <g id="svg_5">
+       <path stroke="#000000" fill="#000000" stroke-width="5" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" d="m669.901654,166.328878l83.299209,0l41.44031,71.160128l-41.858899,71.578717l-83.717798,0.418589l-41.021721,-72.415895l41.858899,-70.741539z" id="svg_13" stroke-opacity="0"/>
+       <path stroke="#000000" fill="#7f0000" stroke-width="5" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" d="m729.763031,273.085893l42.905379,0l21.344882,36.791016l-21.560489,37.007433l-43.120978,0.216413l-21.129279,-37.440263l21.560484,-36.574598l0,0z" stroke-opacity="0" id="svg_18"/>
+       <path stroke="#000000" fill="#ffffff" stroke-width="5" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" d="m687.692735,199.853689l42.068203,0l20.928397,36.582946l-21.139797,36.798137l-42.279594,0.215191l-20.717001,-37.228523l21.139793,-36.367751z" stroke-opacity="0" id="svg_20"/>
+       <path stroke="#000000" fill="#7f0000" stroke-width="5" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" d="m649.97532,199.853691l42.161221,0l21.344882,36.791017l-21.560489,37.007432l-43.120978,0.216415l-21.12928,-37.440265l22.304644,-36.574598z" stroke-opacity="0" id="svg_21"/>
+       <path stroke="#000000" fill="#ffffff" stroke-width="5" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" d="m738.924661,288.752583l24.068874,0l11.973959,20.638865l-12.094909,20.760268l-24.189819,0.121403l-11.853012,-21.003077l12.094907,-20.517459l0,0z" stroke-opacity="0" id="svg_22"/>
+       <path stroke="#000000" fill="#000000" stroke-width="5" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" stroke-opacity="0" d="m738.131659,288.556863c0,0 25.115339,0 25.115339,0l-12.55767,20.720155l-24.278161,0l11.720492,-20.720155z" id="svg_26"/>
+      </g>
+      <text data-tooltip="svg rules" stroke="#000000" transform="matrix(0.65507171366351,0,0,0.65507171366351,379.74011580435325,90.8912764743509) " font-weight="bold" xml:space="preserve" text-anchor="middle" font-family="Sans-serif" font-size="47" id="svg_8" y="334.159303" x="1029.367389" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="0" fill="#7f0000">Digital Intelligence Technologies</text>
+     </g>
+    </svg>
   </div>
+
+  <!--
+  {{>divBuilder id="testSVG" src="http://11.0.0.132/dlintec-logo-vert-1024x1024.svg" style='width:200;height:200;'}}
+  -->
+  <button data-tooltip="Obviously play!!!" type="button" class="btn start-hero-animation">
+    <i  class="fa fa-play-circle"></i> Play
+  </button>
   <div class="container fade-in" style="min-height:70vh">
     <p class="section-normal">{{{dict 'site.main_content' 'Main Content'}}}</p>
     <!--img src="{{dict 'site.logoTitle.url'}}"
@@ -43,18 +71,15 @@
     <!--p>{{> i18n_buttons class="btn btn-danger"}}</p-->
     <!--p>{{_ "hello"}} test2</p-->
     <a href="/release-unsigned.apk" rel='external' download class="btn btn-default btn-file btn-xs"><i class="fa fa-android " aria-hidden="true"></i> Android App</a>
-    <button data-social-login="loginWithFacebook" type="button" class="btn">
+    <button data-tooltip="Fewer clics" data-social-login="loginWithFacebook" type="button" class="btn">
       <i class="fa fa-facebook"></i> Sign in with Facebook
     </button>
+
   </div>
   <!--div class="title-section overlay" >
 
   </div-->
   <h1> </h1>
 
-
-
-
-
-
+{{ > tooltips }}
 </template>

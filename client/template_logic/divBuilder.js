@@ -18,7 +18,7 @@ if (typeof TweenMax == 'undefined'){
 }
 console.log('TweenMax:',TweenMax);
 console.log('TimelineMax:',TimelineMax);
-console.log('Animation:',Animation);
+
 
 Session.set('divBuilderSession',{});
 divBuilderObjects={};

@@ -16,7 +16,7 @@ Template.titlePage.events({
   'click .start-hero-animation': function(e){
     //divBuilder('testSVG').play();
     animate();
-    divBuilderOpenPanel('slidePanelTest','divBuilder',{src:'http://11.0.0.132/dlintec-logo-vert-1024x1024.svg'});
+    divBuilderOpenPanel('slidePanelTest','divBuilder',{src:'dlintec-logo-vert-1024x1024.svg'});
   },
 
   'click [data-social-login]' ( event, template ) {

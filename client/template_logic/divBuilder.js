@@ -16,8 +16,8 @@ if (typeof TweenMax == 'undefined'){
 }else{
   console.log('GSAP loaded.');
 }
-console.log('TweenMax:',TweenMax);
-console.log('TimelineMax:',TimelineMax);
+//console.log('TweenMax:',TweenMax);
+//console.log('TimelineMax:',TimelineMax);
 
 
 Session.set('divBuilderSession',{});
@@ -121,6 +121,12 @@ divBuilder=function(pId){
   return divBuilderObjects[pId];
 }
 
+UI.registerHelper('getDictImage', function(pName) {
+  var dictReturn=gridfsURL(orion.dictionary.get(pName));
+  //console.log('getDict',pName,dictReturn);
+  return dictReturn
+});
+
 Template.divBuilder.helpers({
   uuid: function () {
     return this.id;
@@ -136,7 +142,7 @@ Template.divBuilder.helpers({
     if ((typeof this.style != 'undefined')){
       return this.style;
     }else{
-      return "width:100%;opacity:1;";
+      return "width:100%;opacity:1;overflow:hidden;";
     }
   },
   divContent: function () {
@@ -146,7 +152,7 @@ Template.divBuilder.helpers({
       var reqParams=parse_url(this.src);
       var urlParams=parse_url(Meteor.absoluteUrl());
       var abs_url;
-      //console.log('divContent ext:',fileExt);
+      //console.log('divContent ext:',fileExt,this.src);
       if (typeof reqParams.scheme == 'undefined') {
         switch (fileExt) {
           case 'divml': case 'html': case 'svg':
@@ -174,7 +180,7 @@ Template.divBuilder.helpers({
 
       return "Loading..." ;
 
-      return divBuilderSrcToHtml(this.src);
+      //return divBuilderSrcToHtml(this.src);
 
     }else{
       if ((typeof this.template != 'undefined')){
@@ -232,7 +238,7 @@ Template.divBuilder.events({
 
 Template.divBuilder.rendered = function() {
     console.log('divBuilder rendered:',this.data.id);
-
+    //divBuilderObjects[this.data.id].element.attribute('preserveAspectRatio','xMidYMid slice');
 }
 
 Template.divBuilder.onCreated(function() {
@@ -316,7 +322,7 @@ Template.divBuilder.onCreated(function() {
 
         }
 
-        console.log('  uid:',elementUid);
+        //console.log('  uid:',elementUid);
 
         var indexObject=self.objectIndex[elementUid];
         // no previous index
@@ -351,9 +357,16 @@ Template.divBuilder.onCreated(function() {
     //var element=document.getElementById(self.data.id);
 
     //in 2 seconds, fade back in with visibility:visible
+    var firstChild=self.contentElement.children(':first');
+    console.log('divBuilder play...',firstChild);
+
+    firstChild.attr('preserveAspectRatio','xMidYMid slice');
+    firstChild.attr('width','100%');
+
+    firstChild.attr('height','40vh');
     TweenMax.to(self.element, 0, {autoAlpha:0});
     TweenMax.to(self.element, 3, {autoAlpha:1, delay:.5});
-    console.log('divBuilder play...');
+
   }
   self.json= function(){
     var element = document.getElementById(self.data.id);

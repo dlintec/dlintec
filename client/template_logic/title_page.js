@@ -1,11 +1,13 @@
 animate= function(){
-  element=document.getElementById("svg_13");
-  svghero=document.getElementById("svghero");
-  TweenMax.to(element, 2, {autoAlpha:0});
-  TweenMax.to(svghero, 1, {autoAlpha:1});
+  var paths=document.querySelectorAll("path,rect,polygon");
+  var texts=document.querySelectorAll("text");
+  TweenMax.to(paths, 0, {autoAlpha:0});
+  TweenMax.to(texts, 0, {autoAlpha:0});
+  //TweenMax.to(svghero, 1, {autoAlpha:1});
 
   //in 2 seconds, fade back in with visibility:visible
-  TweenMax.to(element, 3, {autoAlpha:1, delay:2});
+  TweenMax.to(paths, 3, {autoAlpha:1, delay:1});
+  TweenMax.to(texts, 3, {autoAlpha:1, delay:2});
 
 }
 

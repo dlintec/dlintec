@@ -98,7 +98,7 @@ divBuilderSrcToHtml= function(pSrc){
     var fileExt=pSrc.split('.').pop();
     console.log('divBuilderSrcToHtml ext:',fileExt);
     switch (fileExt) {
-      case 'svg':
+      case 'svg': case 'png': case 'jpg': case 'jpeg':
         return "<img src="+pSrc+">" ;
         break;
       default:
@@ -174,7 +174,7 @@ Template.divBuilder.helpers({
       }else {
         abs_url=this.src;
       }
-      //console.log('divBuilder loading:',fileExt,abs_url);
+      console.log('divBuilder loading:',fileExt,abs_url);
 
       divBuilder(this.id).loadUrl(abs_url);
 
@@ -363,7 +363,7 @@ Template.divBuilder.onCreated(function() {
     firstChild.attr('preserveAspectRatio','xMidYMid slice');
     firstChild.attr('width','100%');
 
-    firstChild.attr('height','40vh');
+    //firstChild.attr('height','40vh');
     TweenMax.to(self.element, 0, {autoAlpha:0});
     TweenMax.to(self.element, 3, {autoAlpha:1, delay:.5});
 

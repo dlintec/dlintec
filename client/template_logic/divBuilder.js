@@ -16,6 +16,9 @@ if (typeof TweenMax == 'undefined'){
 }else{
   console.log('GSAP loaded.');
 }
+console.log('TweenMax:',TweenMax);
+console.log('TimelineMax:',TimelineMax);
+console.log('Animation:',Animation);
 
 Session.set('divBuilderSession',{});
 divBuilderObjects={};

@@ -1,7 +1,9 @@
 <template name="titlePage">
   <h4>+</h4>
 
-  <div class="img-hero fade-in" style="text-align:center;min-height:30vh;background-image: url({{gridfsURL (dict 'site.heroImage.url' '/dlintec-hero.png')}})" >
+  <div class="img-hero fade-in" style="min-height:30vh;background-image: url({{gridfsURL (dict 'site.heroImage.url' '/dlintec-hero.png')}})" >
+    {{>divBuilder id="hero-logo" src=(getDictImage 'site.logoBig.url') }}
+
   <!---
   {{>divBuilder id="hero-logo" src=(getDictImage 'site.logoBig.url') }}
 
@@ -26,7 +28,7 @@
      </g>
    </svg> -->
   </div>
-
+  {{>divBuilder id="loadtest" src="/notfound.html" }}
   <!--
   {{>divBuilder id="testSVG" src="http://11.0.0.132/dlintec-logo-vert-1024x1024.svg" style='width:200;height:200;'}}
   -->

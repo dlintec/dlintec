@@ -142,41 +142,45 @@ Template.divBuilder.helpers({
     if ((typeof this.style != 'undefined')){
       return this.style;
     }else{
-      return "width:100%;opacity:1;overflow:hidden;";
+      return "opacity:1;overflow:hidden;";
     }
   },
+
   divContent: function () {
     //console.log('divContent',this,Template.instance());
     if ((typeof this.src != 'undefined')){
-      var fileExt=this.src.split('.').pop();
       var reqParams=parse_url(this.src);
       var urlParams=parse_url(Meteor.absoluteUrl());
       var abs_url;
-      //console.log('divContent ext:',fileExt,this.src);
+      //console.log('divContent src:',this.src,'schene',reqParams.scheme);
+
+      //all request without schema are considered internal
       if (typeof reqParams.scheme == 'undefined') {
-        switch (fileExt) {
-          case 'divml': case 'html': case 'svg':
-
-
-              abs_url=urlParams.scheme+'://'+urlParams.authority
-              if ( this.src.charAt(0) != '/') {
-                abs_url=abs_url+'/';
-              }
-
-              abs_url=abs_url+this.src;
-
-
-            break;
-          default:
-            return "No html origin" ;
+        abs_url=urlParams.scheme+'://'+urlParams.authority
+        if ( this.src.charAt(0) != '/') {
+          abs_url=abs_url+'/';
         }
-
+        abs_url=abs_url+this.src;
       }else {
         abs_url=this.src;
       }
-      console.log('divBuilder loading:',fileExt,abs_url);
 
-      divBuilder(this.id).loadUrl(abs_url);
+      var fileExt=abs_url.split('.').pop();
+
+      //console.log('divBuilder loading:',fileExt,abs_url);
+      switch (fileExt) {
+
+        case 'png': case 'jpg': case 'jpeg':case 'bmp':case 'gif':
+          return "<img src="+abs_url+">";
+          break;
+        default:
+          var reqParams2=parse_url(abs_url);
+          if (typeof reqParams2.scheme != 'undefined') {
+            divBuilder(this.id).loadUrl(abs_url);
+          }else{
+            return "No html origin" ;
+          }
+      }
 
       return "Loading..." ;
 
@@ -264,13 +268,13 @@ Template.divBuilder.onCreated(function() {
   self.loadHtmlString= function(pString){
 
     self.elementSelector="#"+self.data.id;
-    self.contentSelector=".divBuilderContent";
+
     self.element=$(self.elementSelector);
-    self.contentElement=self.element.find(self.contentSelector);
 
-    //console.log('divBuilder loadHtmlString:',self.contentElement);
 
-    self.contentElement.empty();
+    //console.log('divBuilder loadHtmlString:',pString);
+
+    self.element.empty();
     //var json = mapDOM(pString, false);
     var json ;
     var string2='...';
@@ -281,9 +285,9 @@ Template.divBuilder.onCreated(function() {
       string2= json2html(json);
       //console.log('string2:',string2);
 
-      self.contentElement.append(string2);
+      self.element.append(string2);
     } catch (e) {
-      self.contentElement.append('<i class="fa fa-cog " aria-hidden="true"></i> Invalid HTLM string');
+      self.element.append('<i class="fa fa-cog " aria-hidden="true"></i> Invalid HTLM string');
       console.log('loadHtmlString ERROR: Invalid HTML string',e);
       return;
     } finally {
@@ -292,12 +296,12 @@ Template.divBuilder.onCreated(function() {
     //console.log('allElements:',htmlLoaded, element);
     self.buildObjectIndex();
     self.play();
-    //console.log('divBuilder loadHtmlString:',string2,element);
+
   }
   self.buildObjectIndex = function(){
 
-    var allElementsWithUId=self.contentElement.find( '*[data-uid]' );
-    var allLinkedelements=self.contentElement.find( '*[data-linked-uid]' );
+    var allElementsWithUId=self.element.find( '*[data-uid]' );
+    var allLinkedelements=self.element.find( '*[data-linked-uid]' );
     /*d3.select('#'+self.data.id).selectAll('*:not([data-uid])').attr('data-uid', function(){
         var uid=uniqueHexId(self.objectIndex);
         self.objectIndex[uid]={};
@@ -306,7 +310,7 @@ Template.divBuilder.onCreated(function() {
       }
     );*/
 
-    var allElements=self.contentElement.find( "*" );
+    var allElements=self.element.find( "*" );
     //console.log('ALL ELEMENTS:',allElements,"with previous ID:",allElementsWithUId);
     var arrayLength = allElements.length;
     console.log('buildObjectIndex...');
@@ -343,11 +347,23 @@ Template.divBuilder.onCreated(function() {
     console.log('divBuilder loadUrl:',pUrl);
     HTTP.call('GET', pUrl, {}, (error, result) => {
       if (!error) {
-        //console.log('divBuilder File loaded:',result);
-        self.loadHtmlString(result.content);
+        var contentType=result.headers['content-type'];
+        console.log('divBuilder url loaded:',contentType);
+        switch (contentType) {
+          case 'image/svg+xml':case 'image/svg':case 'text/html':
+            self.loadHtmlString(result.content);
+
+            break;
+          case 'image/png':case 'image/jpg':case 'image/jpeg':
+            self.loadHtmlString("<img src="+pUrl+">");
+            break;
+          default:
+            self.loadHtmlString('Content not allowed:',pUrl);
+        }
+
 
       }else{
-        console.log('divBuilder error loading file:',error,result);
+        console.log('divBuilder error loading file:',error);
 
       }
     });
@@ -357,11 +373,11 @@ Template.divBuilder.onCreated(function() {
     //var element=document.getElementById(self.data.id);
 
     //in 2 seconds, fade back in with visibility:visible
-    var firstChild=self.contentElement.children(':first');
+    var firstChild=self.element.children(':first');
     console.log('divBuilder play...',firstChild);
 
     firstChild.attr('preserveAspectRatio','xMidYMid slice');
-    firstChild.attr('width','100%');
+    //firstChild.attr('width','100%');
 
     //firstChild.attr('height','40vh');
     TweenMax.to(self.element, 0, {autoAlpha:0});

@@ -57,6 +57,7 @@ html-tools@1.0.11
 htmljs@1.0.11
 http@1.2.12
 id-map@1.0.9
+jeremy:selectize@0.12.1_5
 jquery@1.11.10
 kadira:blaze-layout@2.3.0
 kadira:flow-router@2.12.1
@@ -119,6 +120,7 @@ orionjs:image-attribute@1.8.1
 orionjs:lang-en@1.8.1
 orionjs:lang-es@1.8.1
 orionjs:pages@1.8.1
+orionjs:relationships@1.8.1
 orionjs:summernote@1.8.1
 peerlibrary:blocking@0.5.2
 peerlibrary:xml2js@0.4.8_1

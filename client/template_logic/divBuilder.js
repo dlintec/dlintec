@@ -5,17 +5,44 @@ console.log('[ dlintec ] divBuilder starting...');
   }
 );*/
 if (typeof TweenMax == 'undefined'){
-  Meteor.Loader.loadJs("https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TweenMax.min.js",
+  Meteor.Loader.loadJs("/gs/TweenMax.js",
     function(e){
-      console.log('GSAP loaded from CDN');
+      console.log('GSAP loaded from public folder');
     }
     ,10000)
     .fail(function(e){
-      console.log('ERROR:no GSAP could be loaded');
-    })
+      Meteor.Loader.loadJs("https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TweenMax.min.js",
+        function(e){
+          console.log('GSAP loaded from CDN');
+        }
+        ,10000)
+        .fail(function(e){
+          console.log('ERROR:no GSAP could be loaded');
+        })
+
+    });
+    Meteor.Loader.loadJs("/gs/TweenMax.js",
+      function(e){
+        console.log('GSAP loaded from public folder');
+      }
+      ,10000)
+      .fail(function(e){
+        Meteor.Loader.loadJs("https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TimelineMax.min.js",
+          function(e){
+            console.log('GSAP Timeline loaded from CDN');
+          }
+          ,10000)
+          .fail(function(e){
+            console.log('ERROR:no GSAP Timeline could be loaded');
+          })
+
+      });
 }else{
   console.log('GSAP loaded.');
 }
+
+
+
 //console.log('TweenMax:',TweenMax);
 //console.log('TimelineMax:',TimelineMax);
 
@@ -111,7 +138,6 @@ divBuilderSrcToHtml= function(pSrc){
 };
 divBuilderHtml2json=function(pString){
   var data = { html: pString };
-
   //  This gives you a string in JSON syntax of the object above that you can
   // send with XMLHttpRequest.
   var json = JSON.stringify(data);
@@ -207,8 +233,8 @@ Template.divBuilder.events({
 
     }
     template.lastClickedId=this.id;
-
   },
+
   'dblclick .divBuilder':function(event,template){
     event.preventDefault();
     if ( (template.lastClickedId == this.id) || ( typeof template.lastClickedId == 'undefined') ){
@@ -266,25 +292,18 @@ Template.divBuilder.onCreated(function() {
 
 
   self.loadHtmlString= function(pString){
-
     self.elementSelector="#"+self.data.id;
-
     self.element=$(self.elementSelector);
-
-
     //console.log('divBuilder loadHtmlString:',pString);
-
     self.element.empty();
     //var json = mapDOM(pString, false);
     var json ;
     var string2='...';
-
     try {
       json = html2json(pString);
       //console.log('json:',json);
       string2= json2html(json);
       //console.log('string2:',string2);
-
       self.element.append(string2);
     } catch (e) {
       self.element.append('<i class="fa fa-cog " aria-hidden="true"></i> Invalid HTLM string');
@@ -292,14 +311,12 @@ Template.divBuilder.onCreated(function() {
       return;
     } finally {
     }
-
     //console.log('allElements:',htmlLoaded, element);
     self.buildObjectIndex();
     self.play();
-
   }
-  self.buildObjectIndex = function(){
 
+  self.buildObjectIndex = function(){
     var allElementsWithUId=self.element.find( '*[data-uid]' );
     var allLinkedelements=self.element.find( '*[data-linked-uid]' );
     /*d3.select('#'+self.data.id).selectAll('*:not([data-uid])').attr('data-uid', function(){
@@ -309,7 +326,6 @@ Template.divBuilder.onCreated(function() {
         return uid;
       }
     );*/
-
     var allElements=self.element.find( "*" );
     //console.log('ALL ELEMENTS:',allElements,"with previous ID:",allElementsWithUId);
     var arrayLength = allElements.length;
@@ -323,34 +339,27 @@ Template.divBuilder.onCreated(function() {
           element.setAttribute("data-uid",uid);
           elementUid=element.getAttribute("data-uid");
           //console.log('ASSIGN element data-uid:',uid);
-
         }
-
         //console.log('  uid:',elementUid);
-
         var indexObject=self.objectIndex[elementUid];
         // no previous index
         if (typeof indexObject == 'undefined') {
           self.objectIndex[elementUid]={};
           indexObject=self.objectIndex[elementUid];
         }
-
         indexObject.element=element;
     }
     //console.log('self.objectIndex:',self.objectIndex);
-
-
   }
 
   self.loadUrl= function(pUrl){
-
     console.log('divBuilder loadUrl:',pUrl);
     HTTP.call('GET', pUrl, {}, (error, result) => {
       if (!error) {
         var contentType=result.headers['content-type'];
         console.log('divBuilder url loaded:',contentType);
         switch (contentType) {
-          case 'image/svg+xml':case 'image/svg':case 'text/html':
+          case 'image/svg+xml':case 'image/svg':
             self.loadHtmlString(result.content);
 
             break;
@@ -358,50 +367,65 @@ Template.divBuilder.onCreated(function() {
             self.loadHtmlString("<img src="+pUrl+">");
             break;
           default:
-            self.loadHtmlString('Content not allowed:',pUrl);
+            if (contentType.startsWith('text/html')) {
+              self.loadHtmlString(result.content);
+
+            } else {
+              self.loadHtmlString('Content not allowed:'+pUrl);
+
+            }
         }
-
-
       }else{
         console.log('divBuilder error loading file:',error);
-
       }
     });
   }
 
   self.play= function(pScene){
     //var element=document.getElementById(self.data.id);
-
     //in 2 seconds, fade back in with visibility:visible
     var firstChild=self.element.children(':first');
-    console.log('divBuilder play...',firstChild);
+    var tl = new TimelineMax();
+    var shapes = self.element.find("rect, circle, ellipse, polyline, path");
+    var texts = self.element.find("text");
 
+    console.log('divBuilder play...',firstChild,shapes);
     firstChild.attr('preserveAspectRatio','xMidYMid slice');
     //firstChild.attr('width','100%');
-
     //firstChild.attr('height','40vh');
-    TweenMax.to(self.element, 0, {autoAlpha:0});
-    TweenMax.to(self.element, 3, {autoAlpha:1, delay:.5});
+    TweenMax.to(texts, 0, {opacity:0});
+    //TweenMax.to(self.element, 3, {autoAlpha:1, delay:.5});
 
+    tl.yoyo(true).repeat(2);
+
+
+    tl.staggerFrom(shapes, 2, {drawSVG:"0% 0%",fillOpacity:0, stroke:"white", strokeWidth:4}, 0.5)
+      .staggerTo(shapes, 1, {drawSVG:"0% 100%"}, 0.5)
+      .staggerTo(texts,1,{opacity:1},1,'-=5')
+      //.fromTo(shapes, 0.1, {drawSVG:"0%"}, {drawSVG:"10%", immediateRender:false}, "+=0.1")
+      //.staggerTo(shapes, 1, {drawSVG:"90% 100%"}, 0.5)
+      //.to(shapes, 1, {rotation:360, scale:0.5, drawSVG:"100%", stroke:"white", strokeWidth:6, transformOrigin:"50% 50%"})
+      //.staggerTo(shapes, 0.5, {stroke:"white", opacity:0}, 0.2)
+      //.staggerTo(shapes, 0.5, {stroke:"black", strokeWidth:"0", scale:1, opacity:1}, 0.2)
+      ;
   }
+
   self.json= function(){
     var element = document.getElementById(self.data.id);
       var json = html2json(element.innerHTML);
-
     return json;
   }
+
   this.autorun(() => {
-    //console.log('divBuilder autorun- element:',self.element);
+    console.log('divBuilder autorun- this:',this,'self:',self.element);
     FlowRouter.watchPathChange();
     const dioramasIsReady = dioramasHandle.ready();
     //console.log(`divBuilder dioramas Handle is ${dioramasIsReady ? 'ready' : 'not ready'}`);
-
     //document.title = orion.dictionary.get('site.title', 'dlintec');
-
   });
 });
+
 Template.divBuilder.onDestroyed(function() {
   delete divBuilderObjects[this.data.id];
   //console.log('devBuilder onDestroyed',this.data.id,divBuilderObjects);
-
 });

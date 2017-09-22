@@ -29,12 +29,13 @@
         <p>{{ i18n 'accounts.update.sections.roles.selectRoles' }}</p>
         {{# each roles }}
           <div class="checkbox">
-            <label>
+            <label >
               {{# if hasRole this }}
-                <input type="checkbox" role="{{ this }}" checked><code>{{ this }}</code>
+                <input type="checkbox"  role="{{ this }}" checked><code>{{ this }}</code>
               {{ else }}
-                <input type="checkbox" role="{{ this }}"> <code>{{ this }}</code>
+                <input type="checkbox"  role="{{ this }}"> <code>{{ this }}</code>
               {{/ if }}
+
             </label>
           </div>
         {{/ each }}

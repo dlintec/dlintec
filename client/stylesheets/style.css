@@ -30,7 +30,7 @@ body {
     line-height: 1.42857143;
     font-weight: 300;
     color: #8a8a8a;
-    background-color: rgba(255, 255, 255, 1);
+    background-color: #fdfdfd;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -54,13 +54,28 @@ transition: opacity 2s ease-in;
 .panel {
     margin-bottom: 0px;
     padding: 0px 0px;
-    background-color: #dfe3e8;
+    background-color: #inherit;
     border: 0px solid transparent;
     border-radius: 0px;
     /*-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
     box-shadow: 2px 5px 5px rgba(0, 0, 0, .5);*/
     -webkit-box-shadow: none;
     box-shadow: none;
+}
+.autoform-array-item-body >  .panel-body {
+  padding:0;
+}
+.panel .panel-default {
+  padding:0;
+}
+.panel-body {
+    margin-bottom: 0px;
+    padding-bottom: : 0px;
+    padding-top: : 0px;
+    background-color: inherit;
+    border: 1px solid transparent;
+    border-radius: 0px;
+
 }
 .panel-default {
 
@@ -72,29 +87,34 @@ transition: opacity 2s ease-in;
     /*box-shadow: 2px 5px 5px rgba(0, 0, 0, .5);*/
 }
 .panel-default > .panel-heading {
+  background-color: rgba(0, 0, 0, 0);
+  height:32px;
+  font-size: 18px;
+  padding-bottom: 5;
 
-
-    color: #ffffff;
-    border-bottom: 0px solid transparent;
-    border-top-left-radius: 0px;
-    font-size: 18px;
-    border-top-right-radius: 0px;
-    border: 0px solid #ccc;
-    border-radius: 0px;
-    background-color: rgb(184, 187, 191);
 }
 .panel-heading {
+    height:16px;
+    padding-left:0;
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 0px;
+    font-size: 12px;
+    border-top-right-radius: 0px;
 
-    color: rgb(255, 255, 255);
+    border-radius: 0px;
+
 }
 
 .panel-title {
     margin-top: 0;
     margin-bottom: 0;
-    font-size: 18px;
-    color: #ffffff;
-}
 
+}
+.panel-heading > h3 {
+  font-size: 12px;
+  padding: 0;
+  margin: 0;
+}
 .panel > .list-group, .panel > .panel-collapse > .list-group {
     margin-bottom: 0;
 
@@ -105,13 +125,13 @@ transition: opacity 2s ease-in;
 
 }
 .list-group-item, .autoform-array-item {
-
+    padding:0;
     background-color:#e5e7e8;
 }
 
 .well {
     min-height: 20px;
-    #padding: 19px;
+    padding: 10px;
     margin-bottom: 20px;
     background-color: #e5e7e8;
     /* border: 1px solid rgba(227, 227, 227, 0);*/
@@ -245,9 +265,13 @@ hr {
     margin-right: 0px;
     margin-bottom: 2px;
     margin-top: 2px;
-
+    color:rgba(128, 128, 128, 0.7);
+    background-color:rgba(128, 128, 128, 0.1) ;
+    border: 3px solid transparent;
+    border-color: white;
     display: inline-block;
-    font-weight: 400;
+    font-weight: 200;
+    font-size: 8;
     line-height: 1.1;
     text-align: center;
     white-space: nowrap;
@@ -256,25 +280,37 @@ hr {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    border: 2px solid transparent;
+
 
     padding: .5rem .7rem;
 
     border-radius: 2rem;
     -webkit-transition: all .2s ease-in-out;
-    -o-transition: all .2s ease-in-out;
-    transition: all .2s ease-in-out;
+    -o-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
 }
 .btn:hover {
-    color: #ffffff;
+    color: black;
 
-    border-color: rgba(255, 255, 255, 0.5);
+    border-color: white;
+    -webkit-box-shadow: 0 -2px 12px rgba(0, 0, 0, .5);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .5);
+
+}
+.btn:focus {
+    color: #ffffff;
+    -webkit-box-shadow: 0 -2px 12px rgba(0, 0, 0, .5);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .5);
+
+    border-color: black;
+    background-color:black ;
 }
 .btn:focus, .btn:active:focus, .btn.active:focus {
     /**outline: 0 none;**/
     /*outline: rgb(#ffffff, 0.51) solid   ;*/
 
     outline: none;
+
 
     /*border: 1px solid transparent;*/
     color: #ffffff;
@@ -309,9 +345,14 @@ hr {
 
 .btn-default:hover {
     color: #ffffff;
-  background-color: rgb(69, 77, 87);
+  background-color: #202225;
+
     /*border-color: rgb(69, 77, 87);*/
 }
+.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active {
+    background: #black;
+}
+
 .btn-danger {
     color: #fff;
     background-color: #da726f;
@@ -721,12 +762,7 @@ color: #ffffff;
     background-color: rgba(229, 232, 233, 1);
     border-color: rgb(152, 152, 152);
 }
-.col-sm-offset-2 {
-    margin-left: 5%;
-}
-.col-sm-8 {
-    width: 90%;
-}
+
 input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
     background-color: rgb(130, 130, 130);
     background-image: none;

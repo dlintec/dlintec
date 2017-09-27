@@ -12,7 +12,7 @@ mydragg = function(){
               //var divid=pdivid.parentNode;
               var thisPanel=divBuilderPanels[container.id];
               var thisPanelJQ=$('#'+container.id);
-              var contentDivJQ=thisPanelJQ.find('.divBuilderPanelContent');
+              var contentDivJQ=thisPanelJQ.find('.divBuilderPanelWindow');
               //console.log('startMoving',thisPanel,contentDivJQ);
               var canDrag=thisPanel.canDrag(evt.offsetX,evt.offsetY);
               if ((thisPanel.maximized) || (! canDrag ) ) {
@@ -56,7 +56,7 @@ mydragg = function(){
           },
           stopMoving : function(container){
             var thisPanelJQ=$('#'+container.id);
-            var contentDivJQ=thisPanelJQ.find('.divBuilderPanelContent');
+            var contentDivJQ=thisPanelJQ.find('.divBuilderPanelWindow');
 
             contentDivJQ.css('-webkit-transition','all .2s ease-in-out');
             contentDivJQ.css('-o-transition','all .2s ease-in-out');
@@ -69,6 +69,10 @@ mydragg = function(){
       }
   }();
 
+divBuilderPanel=function(pPanelId){
+  var thisPanel=divBuilderPanels[pPanelId];
+  return thisPanel;
+}
 divBuilderClosePanel=function functionName(pPanelId) {
   var panelObject=divBuilderPanels[pPanelId];
   if (typeof panelObject != 'undefined') {
@@ -85,9 +89,10 @@ divBuilderClosePanel=function functionName(pPanelId) {
 divBuilderMaximizePanel=function functionName(pPanelId) {
   var thisPanel=divBuilderPanels[pPanelId];
   var thisPanelJQ=$('#'+pPanelId);
-  var contentDivJQ=thisPanelJQ.find('.divBuilderPanelContent');
+  var contentDivJQ=thisPanelJQ.find('.divBuilderPanelWindow');
   thisPanelJQ.rect=contentDivJQ.get(0).getBoundingClientRect();
-  console.log('height:',thisPanel.rect);
+  thisPanel.rect=contentDivJQ.get(0).getBoundingClientRect();
+  console.log('rect:',thisPanel.rect);
   contentDivJQ.css('max-width','100%');
   contentDivJQ.css('max-height','100vh');
   contentDivJQ.css('width','100%');
@@ -100,9 +105,9 @@ divBuilderMaximizePanel=function functionName(pPanelId) {
 divBuilderRestorePanel=function functionName(pPanelId) {
   var thisPanel=divBuilderPanels[pPanelId];
   var thisPanelJQ=$('#'+pPanelId);
-  var contentDivJQ=thisPanelJQ.find('.divBuilderPanelContent');
-  contentDivJQ.css('min-width','50%');
-  contentDivJQ.css('min-height','30vh');
+  var contentDivJQ=thisPanelJQ.find('.divBuilderPanelWindow');
+  //contentDivJQ.css('min-width','50%');
+  //contentDivJQ.css('min-height','30vh');
   contentDivJQ.css('width',thisPanel.rect.width);
   contentDivJQ.css('height',thisPanel.rect.height);
   contentDivJQ.css('top',thisPanel.rect.top);
@@ -136,12 +141,12 @@ divBuilderOpenPanel=function functionName(pPanelId,pTemplate,pData) {
     //var panelObject=$('#'+panelId);
     //divBuilderPanels[panelId]=panelObject;
     console.log('divBuilder new panel created:',panelId,"z:",zindex,Object.keys(divBuilderPanels).length);
-
+    $( "#"+panelId).find(".divBuilderPanelWindow" ).draggable({ handle: ".divBuilderTitle"  });
+    $( "#"+panelId).find(".divBuilderPanelWindow" ).resizable();
   }else {
     console.log('divBuilder reopening panel:',panelId);
     //panelObject=divBuilderPanels[panelId];
   }
-
   //console.log('divBuilderOpenPanel',panelObject,'id:',panelObject.attr('id'),panelClasses);
   return panelId;
 }
@@ -195,6 +200,7 @@ Template.divBuilderPanel.events({
   },
 });
 
+
 Template.divBuilderPanel.onCreated(function() {
   console.log('divBuilderPanel created');
   const self = this;
@@ -203,6 +209,7 @@ Template.divBuilderPanel.onCreated(function() {
     return true;
   }
 
+
   self.modal=true;
   self.height='';
   if (typeof self.data.id == 'undefined'){
@@ -210,10 +217,11 @@ Template.divBuilderPanel.onCreated(function() {
     console.log('new uid created for divBuilderPanel:',self.data.id);
   }
   divBuilderPanels[self.data.id]=self;
+
 });
 
 Template.divBuilderPanel.onDestroyed(function() {
   delete divBuilderPanels[this.data.id];
-  console.log('divBuilderPanel onDestroyed',this.data.id,divBuilderObjects);
+  console.log('divBuilderPanel onDestroyed',this.data.id,divBuilderPanels);
 
 });

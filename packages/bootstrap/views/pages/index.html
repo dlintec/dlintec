@@ -2,10 +2,12 @@
   {{# Layout template="orionBootstrapMediumContentOffset" }}
     {{# Layout template="orionBootstrapTitle" }}
       {{ i18n 'pages.index.title' }}
-      <a href="{{ RouterLayerPathFor 'pages.create' }}" class="btn btn-default btn-xs"><i class="fa fa-plus"></i></a>
+      <a href="{{ RouterLayerPathFor 'pages.create' }}" class="btn btn-default"><i class="fa fa-plus"></i></a>
     {{/ Layout }}
     {{# Layout template="orionBootstrapContentContainer" }}
-      {{> tabular table=tabularTable class="table index-table" id="orion_pages_index" }}
+
+        {{> tabular table=tabularTable class="table index-table" id="orion_pages_index" }}
+
     {{/ Layout }}
   {{/ Layout }}
 </template>

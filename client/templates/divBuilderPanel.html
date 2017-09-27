@@ -1,7 +1,8 @@
 <template name="divBuilderPanel">
-  <div class="divBuilderPanelContent" onmousedown='mydragg.startMoving(this, {{panelElement}} ,event);' onmouseup='mydragg.stopMoving( {{panelElement}} );' >
+  <!--div class="divBuilderPanelWindow" onmousedown='mydragg.startMoving(this, {{panelElement}} ,event);' onmouseup='mydragg.stopMoving( {{panelElement}} );' -->
+  <div class="divBuilderPanelWindow scaleable-wrapper" >
 
-    <div style="overflow: auto;width:100%;height:100%;"  >
+    <div style="overflow-y:auto;overflow-x:auto;width:100%;height:100%;"  >
       {{#if isHtml }}
          {{{content}}}
       {{else}}

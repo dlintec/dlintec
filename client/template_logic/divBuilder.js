@@ -161,14 +161,14 @@ Template.divBuilder.helpers({
     if ((typeof this.class != 'undefined')){
       return "divBuilder " + this.class;
     }else{
-      return "divBuilder";
+      return "divBuilder ";
     }
   },
   divStyle: function () {
     if ((typeof this.style != 'undefined')){
       return this.style;
     }else{
-      return "opacity:1;overflow:hidden;";
+      return "opacity:1;";
     }
   },
 
@@ -282,9 +282,48 @@ Template.divBuilder.onCreated(function() {
   const dioramasHandle=this.subscribe('dioramas');
   self.divClasses= "divBuilder";
   self.divStyle= "border: 1px solid #cfcfcf;width:100px;height:100px;";
-
+  self.scale=1;
   self.objectIndex={};
+  self.registeredEvents={};
 
+  self.registerEvent=function (pEventName,pUid,pCallbackName) {
+
+    if (typeof self.registeredEvents[pEventName] == 'undefined') {
+      self.registeredEvents[pEventName]={};
+    }
+
+    self.registeredEvents[pEventName][pUid]=pCallbackName;
+    console.log('registerEvent:',pEventName,pUid,pCallbackName,self.registeredEvents[pEventName],self.registeredEvents);
+  }
+
+  self.resizeImage=function(pUid){
+    var indexElement=self.objectIndex[pUid].element;
+    //console.log('resizeImage:',pUid,indexElement);
+    if (self.data.scalable) {
+      indexElement.setAttribute('width',self.contentElement.width());
+      indexElement.setAttribute('height',self.contentElement.height());
+    } else {
+      indexElement.setAttribute('width',self.element.width());
+      indexElement.setAttribute('height',self.element.height());
+    }
+
+  }
+
+  self.notify=function (pEventName) {
+    var eventObjects=self.registeredEvents[pEventName];
+    if (typeof eventObjects != 'undefined') {
+
+      for (var theUid in eventObjects) {
+         if (eventObjects.hasOwnProperty(theUid)) {
+            var callback=eventObjects[theUid];
+
+            //console.log('notifying:',pEventName,theUid,callback);
+            self[callback](theUid);
+
+         }
+      }
+    }
+  }
 
   self.attachData=function(pData){
 
@@ -294,8 +333,9 @@ Template.divBuilder.onCreated(function() {
   self.loadHtmlString= function(pString){
     self.elementSelector="#"+self.data.id;
     self.element=$(self.elementSelector);
-    //console.log('divBuilder loadHtmlString:',pString);
-    self.element.empty();
+    self.contentElement=self.element.find('.divBuilderContent');
+    console.log('divBuilder loadHtmlString:',self.element);
+    self.contentElement.empty();
     //var json = mapDOM(pString, false);
     var json ;
     var string2='...';
@@ -304,9 +344,9 @@ Template.divBuilder.onCreated(function() {
       //console.log('json:',json);
       string2= json2html(json);
       //console.log('string2:',string2);
-      self.element.append(string2);
+      self.contentElement.append(string2);
     } catch (e) {
-      self.element.append('<i class="fa fa-cog " aria-hidden="true"></i> Invalid HTLM string');
+      self.contentElement.append('<i class="fa fa-cog " aria-hidden="true"></i> Invalid HTLM string');
       console.log('loadHtmlString ERROR: Invalid HTML string',e);
       return;
     } finally {
@@ -317,8 +357,10 @@ Template.divBuilder.onCreated(function() {
   }
 
   self.buildObjectIndex = function(){
-    var allElementsWithUId=self.element.find( '*[data-uid]' );
-    var allLinkedelements=self.element.find( '*[data-linked-uid]' );
+    console.log('buildObjectIndex...',self.contentElement);
+
+    var allElementsWithUId=self.contentElement.find( '*[data-uid]' );
+    var allLinkedelements=self.contentElement.find( '*[data-linked-uid]' );
     /*d3.select('#'+self.data.id).selectAll('*:not([data-uid])').attr('data-uid', function(){
         var uid=uniqueHexId(self.objectIndex);
         self.objectIndex[uid]={};
@@ -326,10 +368,15 @@ Template.divBuilder.onCreated(function() {
         return uid;
       }
     );*/
-    var allElements=self.element.find( "*" );
+    var allElements=self.contentElement.find( "*" );
     //console.log('ALL ELEMENTS:',allElements,"with previous ID:",allElementsWithUId);
+    self.starterData = {
+      size: {
+        width: 0,
+        height: 0
+      }
+    }
     var arrayLength = allElements.length;
-    console.log('buildObjectIndex...');
     for (var i = 0; i < arrayLength; i++) {
         var element=allElements[i];
         var elementUid=element.getAttribute("data-uid");
@@ -340,6 +387,44 @@ Template.divBuilder.onCreated(function() {
           elementUid=element.getAttribute("data-uid");
           //console.log('ASSIGN element data-uid:',uid);
         }
+
+        var elementTag=element.tagName;
+        if ((typeof elementTag!='undefined')) {
+          self.starterData.size.width=Math.max(self.starterData.size.width,element.getAttribute('width'));
+          self.starterData.size.height=Math.max(self.starterData.size.height,element.getAttribute('height'));
+          switch (elementTag) {
+            case 'svg':
+              //console.log('Element is svg:',element);
+              if (! element.hasAttribute('viewBox')) {
+                element.setAttribute('viewBox','0 0 '+element.getAttribute('width')+' '+element.getAttribute('height'));
+                //console.log('svg new viewBox:',element);
+              }
+
+                //console.log('firstChild element is svg:',element);
+
+              if (! element.hasAttribute('preserveAspectRatio')) {
+                element.setAttribute('preserveAspectRatio','xMinYMin meet');
+                //console.log('svg adding preserveAspectRatio:',element);
+              }
+
+
+            case 'png':  case 'jpg':  case 'jpeg': case 'svg':
+              if (i==0) {
+                //
+                self.adjustSize();
+                element.setAttribute('width',self.element.width());
+                element.setAttribute('height',self.element.height());
+
+                self.registerEvent('resize',elementUid,'resizeImage');
+
+              }
+              break;
+            default:
+
+          }
+
+        }
+
         //console.log('  uid:',elementUid);
         var indexObject=self.objectIndex[elementUid];
         // no previous index
@@ -350,6 +435,13 @@ Template.divBuilder.onCreated(function() {
         indexObject.element=element;
     }
     //console.log('self.objectIndex:',self.objectIndex);
+    if (self.data.scalable) {
+      self.contentElement.width(self.starterData.size.width);
+    }
+
+    //self.adjustSize(self.data.width,self.data.height);
+    self.adjustSize();
+
   }
 
   self.loadUrl= function(pUrl){
@@ -380,23 +472,119 @@ Template.divBuilder.onCreated(function() {
       }
     });
   }
+  self.onResize=function () {
+    //console.log('onResize...');
+    //self.adjustSize(self.data.width,self.data.height);
+    self.adjustSize();
+  }
+  self.adjustSize=function ( px,py) {
+    var newMaxWidth,newMaxHeight;
+    var elementParent;
+    var adjustWidth=true,adjustHeight=true;
+    var width = self.contentElement.width();    // Current image width
+    var height = self.contentElement.height();  // Current image height
+
+    if (typeof px=='object') {
+      elementParent=px;
+      newMaxWidth=elementParent.width();
+      newMaxHeight=elementParent.height();
+    }else{
+      elementParent=self.element.parent();
+      if ((typeof px=='undefined') && (typeof py=='undefined')) {
+        //obtain size from object parameters (data.width and data.height)
+        newMaxWidth=self.data.width;
+        newMaxHeight=self.data.height;
+        /*newMaxWidth=self.element.width();
+        newMaxHeight=self.element.height();*/
+
+      }else{
+        newMaxWidth=px;
+        newMaxHeight=py;
+      }
+    }
+    var parentOverflowX=elementParent.css('overflow-x');
+    var parentOverflowY=elementParent.css('overflow-y');
+
+    if ((typeof newMaxWidth == 'undefined') && (parentOverflowX!='auto') ) {
+      //  console.log('to parent width',parentOverflowY);
+        newMaxWidth=Math.min(elementParent.width(),window.innerWidth);
+    }
+    if ( (typeof newMaxHeight == 'undefined') && (parentOverflowY!='auto')) {
+      //console.log('to parent height',parentOverflowY);
+        newMaxHeight=Math.min(elementParent.height(),window.innerHeight);
+    }
+
+    var maxWidth = newMaxWidth; // Max width for the image
+    var maxHeight = newMaxHeight;    // Max height for the image
+    //console.log('adjustSize pars:',px,py,'form',width,height,'to:',newMaxWidth,newMaxHeight,'parent:',self.element);
+    //self.element.css("width", newMaxWidth); // Set new width
+    //self.element.css("height", newMaxHeight);  // Scale height based on ratio
+    //self.element.height(newMaxHeight);    // Reset height to match scaled image
+    //self.element.width(newMaxWidth);    // Reset width to match scaled image
+    //self.element.css('-ms-transform', 'scale( 0.5 );');
+    //self.element.css('-webkit-transform', 'scale( 0.5 );');
+    //self.element.css('transform', 'scale( 0.5 );');
+
+    var $el = self.contentElement;
+    var elHeight = $el.outerHeight();
+    var elWidth = $el.outerWidth();
+
+    var $wrapper = self.element;
+
+  /*  $wrapper.resizable({
+      resize: doResize
+    });*/
+
+    function doResize(event, ui) {
+
+      var scale, origin;
+      if ((self.data.scalable)  ){
+        //scale = Math.min( newMaxWidth /ui.size.width , newMaxHeight /ui.size.height );
+        //scale = Math.min( ui.size.width / elWidth, ui.size.height / elHeight );
+        scale = Math.min( newMaxWidth /ui.size.width,  newMaxHeight/ui.size.height  );
+        //scale = Math.min( maxWidth / elWidth, maxHeight / elHeight );
+        //console.log('scaling:',scale,ui,newMaxWidth,newMaxHeight);
+      }else {
+        scale=self.scale;
+        //console.log('scaling:',scale,ui,newMaxWidth,newMaxHeight);
+      }
+      $el.css({
+        transform: "scale(" + scale + ")"
+      });
+
+    }
+    doResize(null, self.starterData);
+    if (self.data.scalable) {
+      //console.log($el[0].getBoundingClientRect().width);
+      self.element.height($el[0].getBoundingClientRect().height);
+
+    }
+    if (typeof self.data.width != 'undefined') {
+      self.element.width(self.data.width);
+    }
+    if (typeof self.data.height != 'undefined') {
+      self.element.height(self.data.height);
+    }
+    if ( (parentOverflowX!='auto') && (parentOverflowY!='auto')) {
+      self.notify('resize');
+    }
+  }
 
   self.play= function(pScene){
     //var element=document.getElementById(self.data.id);
     //in 2 seconds, fade back in with visibility:visible
-    var firstChild=self.element.children(':first');
+
     var tl = new TimelineMax();
     var shapes = self.element.find("rect, circle, ellipse, polyline, path");
     var texts = self.element.find("text");
-
-    console.log('divBuilder play...',firstChild,shapes);
-    firstChild.attr('preserveAspectRatio','xMidYMid slice');
+    //console.log('divBuilder play...',shapes);
+    //firstChild.attr('preserveAspectRatio','xMidYMid slice');
     //firstChild.attr('width','100%');
     //firstChild.attr('height','40vh');
     TweenMax.to(texts, 0, {opacity:0});
     //TweenMax.to(self.element, 3, {autoAlpha:1, delay:.5});
 
-    tl.yoyo(true).repeat(2);
+    //tl.yoyo(true).repeat(2);
 
 
     tl.staggerFrom(shapes, 2, {drawSVG:"0% 0%",fillOpacity:0, stroke:"white", strokeWidth:4}, 0.5)
@@ -423,6 +611,9 @@ Template.divBuilder.onCreated(function() {
     //console.log(`divBuilder dioramas Handle is ${dioramasIsReady ? 'ready' : 'not ready'}`);
     //document.title = orion.dictionary.get('site.title', 'dlintec');
   });
+  window.addEventListener("resize", self.onResize );
+
+
 });
 
 Template.divBuilder.onDestroyed(function() {

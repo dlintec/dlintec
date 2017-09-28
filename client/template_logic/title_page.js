@@ -41,11 +41,11 @@ Template.titlePage.events({
 });
 
 Template.titlePage.created = function() {
-  console.log('titlePage created.');
+  //console.log('titlePage created.');
   //Meteor.Loader.loadJs("/gsap/TweenMax.min.js");
 }
 Template.titlePage.rendered = function() {
-    console.log('titlePage rendered');
+    //console.log('titlePage rendered');
     setTimeout(  animate, 500);
 
 

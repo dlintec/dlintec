@@ -116,7 +116,7 @@ divBuilderRestorePanel=function functionName(pPanelId) {
 
 }
 divBuilderOpenPanel=function functionName(pPanelId,pTemplate,pData) {
-  var panelClasses='divBuilderPanel';
+  var panelClasses='divBuilderPanel modal ';
   var alreadyOpened=false;
   var panelObject;
   var panelId;

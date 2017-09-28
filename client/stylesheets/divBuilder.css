@@ -4,6 +4,11 @@ overflow: hidden;
 
 }
 
+.fit {
+  height: 100%;
+  width: 100%;
+
+}
 .divBuilderPanel {
   /*background-color: whitevec4(1.0, 1.0, 1.0, 0);*/
   color:black;

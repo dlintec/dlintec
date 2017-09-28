@@ -1,19 +1,22 @@
 <template name="titlePage">
-  <h4>+</h4>
 
+<div class="" style="min-height:50px">
+
+</div>
   <div class="img-hero fade-in" style="min-height:40vh;background-image: url({{gridfsURL (dict 'site.heroImage.url' '/dlintec-hero.png')}})" >
-      {{>divBuilder id="hero-logo" src=(getDictImage 'site.logoBig.url')  }}
+
+      {{>divBuilder id="hero-logo" class="fit" src=(getDictImage 'site.logoBig.url')  }}
   </div>
 
   <!--
   {{>divBuilder id="testSVG" src="http://11.0.0.132/dlintec-logo-vert-1024x1024.svg" style='width:200;height:200;'}}
   -->
 
-  <div class="container-fluid fade-in" style="min-height:70vh">
+  <div class="container-fluid fade-in" style="min-height:50vh">
     <button data-tooltip="Obviously play!!!" type="button" class="btn start-hero-animation">
       <i  class="fa fa-play-circle"></i> Play
     </button>
-    {{>divBuilder id="loadtest" src="notfound.html" scalable=true width=200 height=200}}
+    {{>divBuilder id="loadtest" src="notfound.html" scalable=true width=150}}
 
     <p class="section-normal">{{{dict 'site.main_content' 'Main Content'}}}</p>
     <!--img src="{{dict 'site.logoTitle.url'}}"
@@ -62,7 +65,7 @@
   <!--div class="title-section overlay" >
 
   </div-->
-  <h1> </h1>
+
 
 {{ > tooltips }}
 </template>

@@ -4,6 +4,10 @@ console.log('[ dlintec ] divBuilder starting...');
 
   }
 );*/
+
+$( document ).ready(function() {
+    console.log( "divBuilder document ready!" );
+});
 if (typeof TweenMax == 'undefined'){
   Meteor.Loader.loadJs("/gs/TweenMax.js",
     function(e){
@@ -268,6 +272,12 @@ Template.divBuilder.events({
 
 Template.divBuilder.rendered = function() {
     console.log('divBuilder rendered:',this.data.id);
+    var theDiv=$('#'+this.data.id);
+    if (theDiv.hasClass('fit')) {
+
+      console.log('Fit:',theDiv);
+    }
+    divBuilder(this.data.id).adjust();
     //divBuilderObjects[this.data.id].element.attribute('preserveAspectRatio','xMidYMid slice');
 }
 
@@ -285,6 +295,12 @@ Template.divBuilder.onCreated(function() {
   self.scale=1;
   self.objectIndex={};
   self.registeredEvents={};
+  self.starterData = {
+    size: {
+      width: 0,
+      height: 0
+    }
+  };
 
   self.registerEvent=function (pEventName,pUid,pCallbackName) {
 
@@ -293,21 +309,9 @@ Template.divBuilder.onCreated(function() {
     }
 
     self.registeredEvents[pEventName][pUid]=pCallbackName;
-    console.log('registerEvent:',pEventName,pUid,pCallbackName,self.registeredEvents[pEventName],self.registeredEvents);
+    //console.log('registerEvent:',pEventName,pUid,pCallbackName,self.registeredEvents[pEventName],self.registeredEvents);
   }
 
-  self.resizeImage=function(pUid){
-    var indexElement=self.objectIndex[pUid].element;
-    //console.log('resizeImage:',pUid,indexElement);
-    if (self.data.scalable) {
-      indexElement.setAttribute('width',self.contentElement.width());
-      indexElement.setAttribute('height',self.contentElement.height());
-    } else {
-      indexElement.setAttribute('width',self.element.width());
-      indexElement.setAttribute('height',self.element.height());
-    }
-
-  }
 
   self.notify=function (pEventName) {
     var eventObjects=self.registeredEvents[pEventName];
@@ -334,7 +338,7 @@ Template.divBuilder.onCreated(function() {
     self.elementSelector="#"+self.data.id;
     self.element=$(self.elementSelector);
     self.contentElement=self.element.find('.divBuilderContent');
-    console.log('divBuilder loadHtmlString:',self.element);
+    //console.log('divBuilder loadHtmlString:',self.element);
     self.contentElement.empty();
     //var json = mapDOM(pString, false);
     var json ;
@@ -357,23 +361,20 @@ Template.divBuilder.onCreated(function() {
   }
 
   self.buildObjectIndex = function(){
-    console.log('buildObjectIndex...',self.contentElement);
+    //console.log('buildObjectIndex...',self.contentElement);
 
     var allElementsWithUId=self.contentElement.find( '*[data-uid]' );
     var allLinkedelements=self.contentElement.find( '*[data-linked-uid]' );
-    /*d3.select('#'+self.data.id).selectAll('*:not([data-uid])').attr('data-uid', function(){
-        var uid=uniqueHexId(self.objectIndex);
-        self.objectIndex[uid]={};
-        console.log('ASSIGN element data-uid:',uid);
-        return uid;
-      }
-    );*/
+
     var allElements=self.contentElement.find( "*" );
     //console.log('ALL ELEMENTS:',allElements,"with previous ID:",allElementsWithUId);
-    self.starterData = {
-      size: {
-        width: 0,
-        height: 0
+
+    self.starterData.size.width=0;
+    self.starterData.size.height=0;
+    for (var objId in self.objectIndex) {
+      if (self.objectIndex.hasOwnProperty(objId)) {
+        delete self.objectIndex[objId];
+
       }
     }
     var arrayLength = allElements.length;
@@ -389,9 +390,15 @@ Template.divBuilder.onCreated(function() {
         }
 
         var elementTag=element.tagName;
+        var elementData = {};
+        $.each(element.attributes, function() {
+          if(this.specified) {
+            elementData[this.name] = this.value;
+          }
+        });
+
         if ((typeof elementTag!='undefined')) {
-          self.starterData.size.width=Math.max(self.starterData.size.width,element.getAttribute('width'));
-          self.starterData.size.height=Math.max(self.starterData.size.height,element.getAttribute('height'));
+
           switch (elementTag) {
             case 'svg':
               //console.log('Element is svg:',element);
@@ -409,19 +416,21 @@ Template.divBuilder.onCreated(function() {
 
 
             case 'png':  case 'jpg':  case 'jpeg': case 'svg':
-              if (i==0) {
+              if ((i==0) ) {
                 //
-                self.adjustSize();
-                element.setAttribute('width',self.element.width());
-                element.setAttribute('height',self.element.height());
+                //self.adjust();
+                //element.setAttribute('width',self.element.width());
+                //element.setAttribute('height',self.element.height());
 
-                self.registerEvent('resize',elementUid,'resizeImage');
+                self.registerEvent('resize',elementUid,'adjustElement');
 
               }
               break;
             default:
 
           }
+          self.starterData.size.width=Math.max(self.starterData.size.width,element.getAttribute('width'));
+          self.starterData.size.height=Math.max(self.starterData.size.height,element.getAttribute('height'));
 
         }
 
@@ -433,14 +442,15 @@ Template.divBuilder.onCreated(function() {
           indexObject=self.objectIndex[elementUid];
         }
         indexObject.element=element;
+        indexObject.originalData=elementData;
     }
-    //console.log('self.objectIndex:',self.objectIndex);
     if (self.data.scalable) {
       self.contentElement.width(self.starterData.size.width);
     }
+    //console.log('self.objectIndex:',self.objectIndex,self.element);
 
-    //self.adjustSize(self.data.width,self.data.height);
-    self.adjustSize();
+    //self.adjust(self.data.width,self.data.height);
+    self.adjust();
 
   }
 
@@ -449,7 +459,7 @@ Template.divBuilder.onCreated(function() {
     HTTP.call('GET', pUrl, {}, (error, result) => {
       if (!error) {
         var contentType=result.headers['content-type'];
-        console.log('divBuilder url loaded:',contentType);
+        //console.log('divBuilder url loaded:',contentType);
         switch (contentType) {
           case 'image/svg+xml':case 'image/svg':
             self.loadHtmlString(result.content);
@@ -474,10 +484,12 @@ Template.divBuilder.onCreated(function() {
   }
   self.onResize=function () {
     //console.log('onResize...');
-    //self.adjustSize(self.data.width,self.data.height);
-    self.adjustSize();
+    //self.adjust(self.data.width,self.data.height);
+    self.adjust();
   }
-  self.adjustSize=function ( px,py) {
+  self.adjust=function ( px,py) {
+    self.element=$('#'+self.data.id);
+    self.contentElement=self.element.find('.divBuilderContent');
     var newMaxWidth,newMaxHeight;
     var elementParent;
     var adjustWidth=true,adjustHeight=true;
@@ -516,14 +528,6 @@ Template.divBuilder.onCreated(function() {
 
     var maxWidth = newMaxWidth; // Max width for the image
     var maxHeight = newMaxHeight;    // Max height for the image
-    //console.log('adjustSize pars:',px,py,'form',width,height,'to:',newMaxWidth,newMaxHeight,'parent:',self.element);
-    //self.element.css("width", newMaxWidth); // Set new width
-    //self.element.css("height", newMaxHeight);  // Scale height based on ratio
-    //self.element.height(newMaxHeight);    // Reset height to match scaled image
-    //self.element.width(newMaxWidth);    // Reset width to match scaled image
-    //self.element.css('-ms-transform', 'scale( 0.5 );');
-    //self.element.css('-webkit-transform', 'scale( 0.5 );');
-    //self.element.css('transform', 'scale( 0.5 );');
 
     var $el = self.contentElement;
     var elHeight = $el.outerHeight();
@@ -539,10 +543,7 @@ Template.divBuilder.onCreated(function() {
 
       var scale, origin;
       if ((self.data.scalable)  ){
-        //scale = Math.min( newMaxWidth /ui.size.width , newMaxHeight /ui.size.height );
-        //scale = Math.min( ui.size.width / elWidth, ui.size.height / elHeight );
         scale = Math.min( newMaxWidth /ui.size.width,  newMaxHeight/ui.size.height  );
-        //scale = Math.min( maxWidth / elWidth, maxHeight / elHeight );
         //console.log('scaling:',scale,ui,newMaxWidth,newMaxHeight);
       }else {
         scale=self.scale;
@@ -554,6 +555,7 @@ Template.divBuilder.onCreated(function() {
 
     }
     doResize(null, self.starterData);
+    //var fitToParent=self.element.hasClass('fit');
     if (self.data.scalable) {
       //console.log($el[0].getBoundingClientRect().width);
       self.element.height($el[0].getBoundingClientRect().height);
@@ -569,6 +571,38 @@ Template.divBuilder.onCreated(function() {
       self.notify('resize');
     }
   }
+
+  self.adjustElement=function(pUid){
+    var indexElement=self.objectIndex[pUid];
+
+
+    var refElement;
+    if (self.data.scalable) {
+      refElement=self.contentElement;
+    } else {
+      refElement=self.element;
+    }
+    var originalWidth= indexElement.originalData.width;
+    var originalHeight= indexElement.originalData.height;
+    var refWidth=refElement.width();
+    var refHeight=refElement.height();
+
+
+    indexElement.element.setAttribute('height',refHeight);
+
+    indexElement.element.setAttribute('width',refWidth);
+
+    console.log('adjustElement:',pUid,originalWidth,originalHeight,indexElement,self.element);
+
+
+
+
+
+
+
+
+  }
+
 
   self.play= function(pScene){
     //var element=document.getElementById(self.data.id);

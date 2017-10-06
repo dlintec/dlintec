@@ -20,9 +20,9 @@ console.log(`TAPi18n languages`,TAPi18n.getLanguages());
   //ReactDOM.render(<reactApp />,  document.getElementById('render-target'));
   if (Meteor.isClient) {
       Bert.defaults = {
-        hideDelay: 5000,
+        hideDelay: 10000,
         // Accepts: a number in milliseconds.
-        style: 'fixed-top',
+        style: 'fixed-bottom',
         // Accepts: fixed-top, fixed-bottom, growl-top-left,   growl-top-right,
         // growl-bottom-left, growl-bottom-right.
         type: 'default'

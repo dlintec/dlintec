@@ -1,3 +1,4 @@
+
 animate= function(){
   var paths=document.querySelectorAll("path,rect,polygon");
   var texts=document.querySelectorAll("text");
@@ -10,7 +11,6 @@ animate= function(){
   //TweenMax.to(texts, 3, {autoAlpha:1, delay:2});
 
 }
-
 
 Template.titlePage.events({
   'click .scroll-link': function(e){
@@ -45,45 +45,33 @@ Template.titlePage.created = function() {
   //Meteor.Loader.loadJs("/gsap/TweenMax.min.js");
 }
 Template.titlePage.rendered = function() {
-    //console.log('titlePage rendered');
-    setTimeout(  animate, 500);
+  Meteor.Loader.loadJs("/sankey/d3-sankey-diagram.js",
+    function(e){console.log('sankey loaded from public folder');
+      var color = d3.scale.category10();
+      console.log('sankey:',sankeyDiagram);
+      var diagram = sankeyDiagram()
+        .width(800)
+        .nodeTitle(function(d) { console.log(d);return d.data.title !== undefined ? d.data.title : d.id; })
+        .linkTypeTitle(function(d) { return d.data.title; })
+        .linkColor(function(d) { return color(d.data.type); });
 
-
-    var $el = $("#very-specific-design");
-    var elHeight = $el.outerHeight();
-    var elWidth = $el.outerWidth();
-
-    var $wrapper = $("#scaleable-wrapper");
-
-    $wrapper.resizable({
-      resize: doResize
-    });
-
-    function doResize(event, ui) {
-
-      var scale, origin;
-
-      scale = Math.min(
-        ui.size.width / elWidth,
-        ui.size.height / elHeight
-      );
-
-      $el.css({
-        transform: "translate(-50%, -50%) " + "scale(" + scale + ")"
+      d3.json('/sankey.json', function(energy) {
+        d3.select('#sankey')
+            .datum(energy)
+            .call(diagram);
       });
 
-    }
 
-    var starterData = {
-      size: {
-        width: $wrapper.width(),
-        height: $wrapper.height()
-      }
-    }
-    doResize(null, starterData);
+    },10000)
+    .fail(function(e){
+            console.log('ERROR:no sankey could be loaded');
+    });
+
+
 
 }
 Template.titlePage.onCreated(function() {
+
   const pagesHandle=this.subscribe('pages');
   const sectionsHandle=this.subscribe('sectionsPub');
   this.autorun(() => {
@@ -99,6 +87,7 @@ Template.titlePage.onCreated(function() {
 });
 
 Template.titlePage.helpers({
+
   sections: function(){
       return Sections.find({}, {sort: {order: 1}});
   },

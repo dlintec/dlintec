@@ -8,6 +8,8 @@ console.log('[ dlintec ] divBuilder starting...');
 $( document ).ready(function() {
     console.log( "divBuilder document ready!" );
 });
+//Meteor.Loader.loadJs("/fancytree/skin-win8/ui.fancytree.css");
+//Meteor.Loader.loadJs("/fancytree/jquery.fancytree-all-deps.min.js");
 if (typeof TweenMax == 'undefined'){
   Meteor.Loader.loadJs("/gs/TweenMax.js",
     function(e){
@@ -25,25 +27,11 @@ if (typeof TweenMax == 'undefined'){
         })
 
     });
-    Meteor.Loader.loadJs("/gs/TweenMax.js",
-      function(e){
-        console.log('GSAP loaded from public folder');
-      }
-      ,10000)
-      .fail(function(e){
-        Meteor.Loader.loadJs("https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TimelineMax.min.js",
-          function(e){
-            console.log('GSAP Timeline loaded from CDN');
-          }
-          ,10000)
-          .fail(function(e){
-            console.log('ERROR:no GSAP Timeline could be loaded');
-          })
 
-      });
 }else{
   console.log('GSAP loaded.');
 }
+
 
 
 
@@ -592,7 +580,7 @@ Template.divBuilder.onCreated(function() {
 
     indexElement.element.setAttribute('width',refWidth);
 
-    console.log('adjustElement:',pUid,originalWidth,originalHeight,indexElement,self.element);
+    //console.log('adjustElement:',pUid,originalWidth,originalHeight,indexElement,self.element);
 
 
 
